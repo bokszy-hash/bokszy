@@ -1,125 +1,261 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taxi Tarif Rechner</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f2f2f7;
-            color: #1c1c1e;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        .card {
-            background: #ffffff;
-            padding: 24px;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h2 {
-            margin-top: 0;
-            font-size: 20px;
-            text-align: center;
-            color: #3a3a3c;
-        }
-        .input-group {
-            margin-bottom: 16px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #c7c7cc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            outline: none;
-        }
-        input[type="number"]:focus {
-            border-color: #007aff;
-        }
-        button {
-            width: 100%;
-            background-color: #34c759;
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:active {
-            background-color: #0056b3;
-        }
-        .results {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #e5e5ea;
-            display: none;
-        }
-        .section-title {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #8e8e93;
-            margin: 12px 0 8px 0;
-            font-weight: 600;
-        }
-        .section-title:first-child {
-            margin-top: 0;
-        }
-        .result-item {
-            font-size: 16px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .result-value {
-            font-weight: bold;
-            color: #007aff;
-        }
-        .result-value.grossraum {
-            color: #34c759;
-        }
-        .divider {
-            height: 1px;
-            background-color: #e5e5ea;
-            margin: 12px 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taxi Tarif Rechner</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+    background: #f2f2f7;
+    color: #1c1c1e;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 22px;
+    text-align: center;
+    color: #3a3a3c;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #c7c7cc;
+    border-radius: 8px;
+    outline: none;
+}
+
+input[type="number"]:focus {
+    border-color: #007aff;
+}
+
+button {
+    width: 100%;
+    background: #007aff;
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.results {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e5ea;
+    display: none;
+}
+
+.section-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8e8e93;
+    margin: 12px 0 8px;
+    font-weight: 600;
+}
+
+.section-title:first-child {
+    margin-top: 0;
+}
+
+.result-item {
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.result-value {
+    font-weight: bold;
+    color: #007aff;
+    white-space: nowrap;
+}
+
+.result-value.grossraum {
+    color: #34c759;
+}
+
+.divider {
+    height: 1px;
+    background: #e5e5ea;
+    margin: 12px 0;
+}
+
+/* MATRIX ANIMATION */
+
+#matrix-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.96);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#matrix-screen.active {
+    display: flex;
+}
+
+#matrix-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.matrix-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 20px;
+}
+
+.matrix-title {
+    color: #00ff41;
+    font-size: clamp(19px, 5vw, 27px);
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px #00ff41;
+    animation: pulse 0.8s infinite alternate;
+}
+
+.matrix-subtitle {
+    color: #8affaa;
+    font-size: 13px;
+    margin-top: 15px;
+    letter-spacing: 2px;
+}
+
+.matrix-progress {
+    width: 230px;
+    height: 4px;
+    background: #14351b;
+    margin: 25px auto 0;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.matrix-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #00ff41;
+    box-shadow: 0 0 12px #00ff41;
+    animation: progress 2.1s linear forwards;
+}
+
+@keyframes pulse {
+    from { opacity: 0.65; }
+    to { opacity: 1; }
+}
+
+@keyframes progress {
+    to { width: 100%; }
+}
+
+/* RESULT ANIMATION */
+
+.results.show-results {
+    animation: resultAppear 0.6s ease-out;
+}
+
+@keyframes resultAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+    }
+}
+</style>
 </head>
+
 <body>
 
 <div class="card">
-    <h2>Taxi Tarif Rechner</h2>
+
+    <h2>🚕 Taxi Tarif Rechner</h2>
+
     <div class="input-group">
         <label for="km">Km eingeben:</label>
-        <input type="number" id="km" step="any" placeholder="z.B. 12.5" inputmode="decimal">
+        <input type="number" id="km" step="any"
+               placeholder="z.B. 12.5" inputmode="decimal">
     </div>
-    <button onclick="berechne()">Berechnen</button>
-    
+
+    <button id="calculate-button" onclick="berechne()">
+        Berechnen
+    </button>
+
     <div class="results" id="results">
+
         <div class="section-title">Bis zu 4 Fahrgästen</div>
+
         <div class="result-item">
             <span>Tagfahrpreis:</span>
             <span class="result-value" id="tp-val">0.00 EUR</span>
         </div>
+
         <div class="result-item">
             <span>Nachtfahrpreis:</span>
             <span class="result-value" id="tpn-val">0.00 EUR</span>
@@ -128,75 +264,261 @@
         <div class="divider"></div>
 
         <div class="section-title">Ab dem 5. Fahrgast</div>
+
         <div class="result-item">
             <span>Tagfahrpreis Großraum:</span>
             <span class="result-value grossraum" id="tpgr-val">0.00 EUR</span>
         </div>
+
         <div class="result-item">
             <span>Nachtfahrpreis Großraum:</span>
             <span class="result-value grossraum" id="tpngr-val">0.00 EUR</span>
+        </div>
+
+    </div>
+</div>
+
+<!-- MATRIX OVERLAY -->
+
+<div id="matrix-screen">
+    <canvas id="matrix-canvas"></canvas>
+
+    <div class="matrix-content">
+        <div class="matrix-title">
+            TARIF BERECHNUNG LÄUFT...
+        </div>
+
+        <div class="matrix-subtitle">
+            SYSTEM ANALYSIERT PREISE
+        </div>
+
+        <div class="matrix-progress">
+            <div class="matrix-progress-bar"></div>
         </div>
     </div>
 </div>
 
 <script>
-    function berechne() {
-        // Vessző és pont kezelése a tizedesjegyeknél (pl. 12,5 -> 12.5)
-        let kmInput = document.getElementById('km').value.replace(',', '.');
-        let km = parseFloat(kmInput);
 
-        if (isNaN(km) || km < 0) {
-            alert("Bitte geben Sie eine gültige Kilometeranzahl ein!");
-            return;
-        }
+// MATRIX DIGITAL RAIN
 
-        // Alapdíjak és tarifák (pontosan a Pascal kód alapján)
-        const grp = 4.70;
-        const grpgr = 7.90;
+let matrixAnimation;
 
-        const a = 3.90;
-        const b = 2.90;
-        const c = 2.70;
+function startMatrix() {
 
-        const d = 4.20;
-        const e = 4.00;
-        const f = 3.00;
+    const canvas = document.getElementById("matrix-canvas");
+    const ctx = canvas.getContext("2d");
 
-        let tp = 0;
-        let tpn = 0;
-        let tpgr = 0;
-        let tpngr = 0;
+    const fontSize = 16;
+    let columns;
+    let drops;
 
-        if (km <= 5) {
-            tp = (km * a) + grp;
-            tpgr = (km * d) + grpgr;
-        } else if (km < 26) {
-            tp = (5 * a) + ((km - 5) * b) + grp;
-            tpgr = (5 * d) + ((km - 5) * e) + grpgr;
-        } else {
-            tp = (5 * a) + (20 * b) + ((km - 25) * c) + grp;
-            tpgr = (5 * d) + (20 * e) + ((km - 25) * f) + grpgr;
-        }
+    const characters =
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZアイウエオカキクケコ";
 
-        tpn = tp + (km * 0.2) + 1.0;
-        tpngr = tpgr + (km * 0.2) + 1.0;
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        document.getElementById('tp-val').innerText = tp.toFixed(2) + " EUR";
-        document.getElementById('tpn-val').innerText = tpn.toFixed(2) + " EUR";
-        document.getElementById('tpgr-val').innerText = tpgr.toFixed(2) + " EUR";
-        document.getElementById('tpngr-val').innerText = tpngr.toFixed(2) + " EUR";
+        columns = Math.ceil(canvas.width / fontSize);
 
-        document.getElementById('results').style.display = 'block';
+        drops = Array.from(
+            { length: columns },
+            () => Math.random() * -50
+        );
     }
 
-    // Enter gomb lenyomására is számoljon a mobil billentyűzeten
-    document.getElementById('km').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
+    resizeCanvas();
+
+    function draw() {
+
+        ctx.fillStyle = "rgba(0, 0, 0, 0.09)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+
+            const char = characters[
+                Math.floor(Math.random() * characters.length)
+            ];
+
+            ctx.fillStyle = Math.random() > 0.96
+                ? "#ffffff"
+                : "#00ff41";
+
+            ctx.fillText(
+                char,
+                i * fontSize,
+                drops[i] * fontSize
+            );
+
+            if (drops[i] * fontSize > canvas.height &&
+                Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+
+            drops[i]++;
+        }
+    }
+
+    matrixAnimation = setInterval(draw, 35);
+
+    window.addEventListener("resize", resizeCanvas);
+}
+
+function stopMatrix() {
+    clearInterval(matrixAnimation);
+
+    const canvas = document.getElementById("matrix-canvas");
+    canvas.getContext("2d").clearRect(
+        0, 0, canvas.width, canvas.height
+    );
+}
+
+// PRICE COUNTER ANIMATION
+
+function animatePrice(elementId, target) {
+
+    const element = document.getElementById(elementId);
+    const duration = 650;
+    const start = performance.now();
+
+    function update(now) {
+
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        const current = target * eased;
+
+        element.innerText = current.toFixed(2) + " EUR";
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+
+
+// MAIN CALCULATION
+
+let calculating = false;
+
+async function berechne() {
+
+    if (calculating) return;
+
+    let kmInput = document.getElementById("km").value
+                  .replace(",", ".");
+
+    let km = parseFloat(kmInput);
+
+    if (isNaN(km) || km < 0) {
+        alert("Bitte geben Sie eine gültige Kilometeranzahl ein!");
+        return;
+    }
+
+    // ORIGINAL TARIF VALUES
+
+    const grp = 4.70;
+    const grpgr = 7.90;
+
+    const a = 3.90;
+    const b = 2.90;
+    const c = 2.70;
+
+    const d = 4.20;
+    const e = 4.00;
+    const f = 3.00;
+
+    let tp = 0;
+    let tpn = 0;
+    let tpgr = 0;
+    let tpngr = 0;
+
+    // ORIGINAL CALCULATION LOGIC
+
+    if (km <= 5) {
+
+        tp = (km * a) + grp;
+        tpgr = (km * d) + grpgr;
+
+    } else if (km < 26) {
+
+        tp = (5 * a) + ((km - 5) * b) + grp;
+        tpgr = (5 * d) + ((km - 5) * e) + grpgr;
+
+    } else {
+
+        tp = (5 * a) + (20 * b) + ((km - 25) * c) + grp;
+        tpgr = (5 * d) + (20 * e) + ((km - 25) * f) + grpgr;
+    }
+
+    tpn = tp + (km * 0.2) + 1.0;
+    tpngr = tpgr + (km * 0.2) + 1.0;
+
+    // START MATRIX EFFECT
+
+    calculating = true;
+
+    const button = document.getElementById("calculate-button");
+    const matrix = document.getElementById("matrix-screen");
+    const results = document.getElementById("results");
+
+    button.disabled = true;
+    button.innerText = "Berechnung läuft...";
+
+    results.style.display = "none";
+
+    matrix.classList.add("active");
+
+    startMatrix();
+
+    // Wait for Matrix animation
+
+    await new Promise(resolve => setTimeout(resolve, 2200));
+
+    stopMatrix();
+
+    matrix.classList.remove("active");
+
+    // SHOW RESULTS
+
+    results.style.display = "block";
+    results.classList.remove("show-results");
+
+    void results.offsetWidth;
+
+    results.classList.add("show-results");
+
+    animatePrice("tp-val", tp);
+    animatePrice("tpn-val", tpn);
+    animatePrice("tpgr-val", tpgr);
+    animatePrice("tpngr-val", tpngr);
+
+    button.disabled = false;
+    button.innerText = "Berechnen";
+
+    calculating = false;
+}
+
+
+// ENTER KEY
+
+document.getElementById("km").addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
             event.preventDefault();
             berechne();
-            this.blur(); // Billentyűzet elrejtése számolás után
+            this.blur();
         }
-    });
+    }
+);
+
 </script>
 
 </body>
