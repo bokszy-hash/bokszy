@@ -14,7 +14,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
         .card {
             background: #ffffff;
@@ -71,18 +72,37 @@
             border-top: 1px solid #e5e5ea;
             display: none;
         }
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8e8e93;
+            margin: 12px 0 8px 0;
+            font-weight: 600;
+        }
+        .section-title:first-child {
+            margin-top: 0;
+        }
         .result-item {
             font-size: 16px;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
         .result-value {
             font-weight: bold;
             color: #007aff;
         }
+        .result-value.grossraum {
+            color: #34c759;
+        }
+        .divider {
+            height: 1px;
+            background-color: #e5e5ea;
+            margin: 12px 0;
+        }
     </style>
-<link rel="apple-touch-icon" href="icon.png">
 </head>
 <body>
 
@@ -95,6 +115,7 @@
     <button onclick="berechne()">Berechnen</button>
     
     <div class="results" id="results">
+        <div class="section-title">Bis zu 4 Fahrgästen</div>
         <div class="result-item">
             <span>Tagfahrpreis:</span>
             <span class="result-value" id="tp-val">0.00 EUR</span>
@@ -103,12 +124,25 @@
             <span>Nachtfahrpreis:</span>
             <span class="result-value" id="tpn-val">0.00 EUR</span>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Ab dem 5. Fahrgast</div>
+        <div class="result-item">
+            <span>Tagfahrpreis Großraum:</span>
+            <span class="result-value grossraum" id="tpgr-val">0.00 EUR</span>
+        </div>
+        <div class="result-item">
+            <span>Nachtfahrpreis Großraum:</span>
+            <span class="result-value grossraum" id="tpngr-val">0.00 EUR</span>
+        </div>
     </div>
 </div>
 
 <script>
     function berechne() {
-        let kmInput = document.getElementById('km').value;
+        // Vessző és pont kezelése a tizedesjegyeknél (pl. 12,5 -> 12.5)
+        let kmInput = document.getElementById('km').value.replace(',', '.');
         let km = parseFloat(kmInput);
 
         if (isNaN(km) || km < 0) {
@@ -116,27 +150,53 @@
             return;
         }
 
-        let grp = 4.70;
-        let a = 3.90;
-        let b = 2.90;
-        let c = 2.70;
+        // Alapdíjak és tarifák (pontosan a Pascal kód alapján)
+        const grp = 4.70;
+        const grpgr = 7.90;
+
+        const a = 3.90;
+        const b = 2.90;
+        const c = 2.70;
+
+        const d = 4.20;
+        const e = 4.00;
+        const f = 3.00;
+
         let tp = 0;
         let tpn = 0;
+        let tpgr = 0;
+        let tpngr = 0;
 
         if (km <= 5) {
             tp = (km * a) + grp;
+            tpgr = (km * d) + grpgr;
         } else if (km < 26) {
             tp = (5 * a) + ((km - 5) * b) + grp;
+            tpgr = (5 * d) + ((km - 5) * e) + grpgr;
         } else {
             tp = (5 * a) + (20 * b) + ((km - 25) * c) + grp;
+            tpgr = (5 * d) + (20 * e) + ((km - 25) * f) + grpgr;
         }
 
         tpn = tp + (km * 0.2) + 1.0;
+        tpngr = tpgr + (km * 0.2) + 1.0;
 
         document.getElementById('tp-val').innerText = tp.toFixed(2) + " EUR";
         document.getElementById('tpn-val').innerText = tpn.toFixed(2) + " EUR";
+        document.getElementById('tpgr-val').innerText = tpgr.toFixed(2) + " EUR";
+        document.getElementById('tpngr-val').innerText = tpngr.toFixed(2) + " EUR";
+
         document.getElementById('results').style.display = 'block';
     }
+
+    // Enter gomb lenyomására is számoljon a mobil billentyűzeten
+    document.getElementById('km').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            berechne();
+            this.blur(); // Billentyűzet elrejtése számolás után
+        }
+    });
 </script>
 
 </body>
